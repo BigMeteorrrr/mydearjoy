@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Our Little Universe ❤️</title>
+ <style>
+ :root {
+ --bg: #fff5f7;
+ --card: #ffffff;
+ --primary: #e11d48;
+ --primary-dark: #be123c;
+ --primary-light: #ffe4e6;
+ --text: #334155;
+ --heading: #1e293b;
+ }
+ * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+ body {
+ background: var(--bg);
+ color: var(--text);
+ min-height: 100vh;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ padding: 1.5rem 1rem 4rem;
+ }
+
+ header { text-align: center; margin-bottom: 1.3rem; }
+ header h1 { color: var(--primary); font-size: 2.1rem; margin-bottom: 0.3rem; }
+ header p { color: #64748b; font-size: 0.95rem; }
+
+ /* Navigation Tabs */
+ .tabs {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 0.45rem;
+ justify-content: center;
+ margin-bottom: 1.5rem;
+ max-width: 860px;
+ position: relative;
+ z-index: 10;
+ }
+ .tab-btn {
+ background: var(--card);
+ border: 2px solid var(--primary-light);
+ color: var(--heading);
+ padding: 0.55rem 1rem;
+ border-radius: 999px;
+ cursor: pointer;
+ font-weight: 600;
+ font-size: 0.9rem;
+ transition: all 0.2s ease;
+ }
+ .tab-btn:hover { background: var(--primary-light); }
+ .tab-btn.active {
+ background: var(--primary);
+ color: #fff;
+ border-color: var(--primary);
+ box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
+ }
+
+ /* Main Card Container */
+ .container {
+ width: 100%;
+ max-width: 860px;
+ background: var(--card);
+ border-radius: 18px;
+ padding: 2rem;
+ box-shadow: 0 10px 30px rgba(225, 29, 72, 0.08);
+ }
+ .tab-content { display: none; animation: fadeIn 0.3s ease; }
+ .tab-content.active { display: block; }
+ @keyframes fadeIn {
+ from { opacity: 0; transform: translateY(6px); }
+ to { opacity: 1; transform: translateY(0); }
+ }
+
+ h2 {
+ color: var(--heading);
+ margin-bottom: 0.8rem;
+ border-bottom: 2px solid var(--primary-light);
+ padding-bottom: 0.5rem;
+ }
+ p.intro { color: #64748b; margin-bottom: 1.3rem; line-height: 1.5; }
+
+ /* Page 1: Live Counter & About Us */
+ .counter-grid {
+ display: grid;
+ grid-template-columns: repeat(4, 1fr);
+ gap: 0.8rem;
+ margin: 1.3rem 0;
+ }
+ .time-box {
+ background: var(--primary-light);
+ padding: 1rem 0.5rem;
+ border-radius: 12px;
+ text-align: center;
+ }
+ .time-box span { display: block; font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+ .time-box small { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--heading); }
+ .info-cards {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+ gap: 1rem;
+ margin-top: 1.2rem;
+ }
+ .info-card {
+ background: #fffafb;
+ border: 1px solid var(--primary-light);
+ padding: 1.2rem;
+ border-radius: 12px;
+ line-height: 1.6;
+ }
+ .info-card h3 { color: var(--primary); font-size: 1.05rem; margin-bottom: 0.4rem; }
+
+ /* Page 2: Photo Gallery + Lightbox */
+ .gallery {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+ gap: 1rem;
+ }
+ .photo-card {
+ background: var(--bg);
+ border-radius: 12px;
+ overflow: hidden;
+ box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+ cursor: pointer;
+ transition: transform 0.2s;
+ }
+ .photo-card:hover { transform: translateY(-4px); }
+ .photo-card img { width: 100%; height: 220px; object-fit: cover; display: block; }
+ .photo-card .caption { padding: 0.9rem; }
+ .photo-card h4 { color: var(--heading); font-size: 1rem; margin-bottom: 0.25rem; }
+ .photo-card p { font-size: 0.88rem; color: #64748b; }
+
+ /* Lightbox Modal */
+ .modal {
+ display: none;
+ position: fixed;
+ inset: 0;
+ background: rgba(15, 23, 42, 0.85);
+ z-index: 100;
+ align-items: center;
+ justify-content: center;
+ padding: 1rem;
+ }
+ .modal.open { display: flex; }
+ .modal-box {
+ background: #fff;
+ max-width: 550px;
+ width: 100%;
+ border-radius: 16px;
+ overflow: hidden;
+ text-align: center;
+ padding-bottom: 1.2rem;
+ }
+ .modal-box img { width: 100%; max-height: 60vh; object-fit: contain; background: #000; }
+ .modal-box h3 { margin: 1rem 1rem 0.4rem; color: var(--heading); }
+ .modal-box p { margin: 0 1.2rem 1rem; color: var(--text); line-height: 1.5; }
+
+ /* Page 3: Detailed Timeline */
+ .timeline-item {
+ border-left: 3px solid var(--primary);
+ padding-left: 1.3rem;
+ margin-bottom: 1.6rem;
+ position: relative;
+ line-height: 1.6;
+ }
+ .timeline-item::before {
+ content: '❤️';
+ position: absolute;
+ left: -11px;
+ top: 0;
+ background: var(--card);
+ font-size: 0.9rem;
+ }
+ .timeline-date { font-weight: 700; color: var(--primary); font-size: 0.85rem; text-transform: uppercase; }
+ .timeline-title { font-weight: 700; color: var(--heading); font-size: 1.1rem; margin: 0.2rem 0; }
+
+ /* Page 4: Open When Envelopes */
+ .envelopes {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+ gap: 1rem;
+ }
+ .envelope {
+ background: var(--primary-light);
+ border: 2px dashed var(--primary);
+ border-radius: 12px;
+ padding: 1.3rem;
+ text-align: center;
+ cursor: pointer;
+ transition: 0.2s;
+ }
+ .envelope:hover { background: #fecdd3; }
+ .envelope-icon { font-size: 2rem; margin-bottom: 0.4rem; }
+ .envelope-msg {
+ display: none;
+ margin-top: 0.8rem;
+ padding-top: 0.8rem;
+ border-top: 1px solid rgba(225, 29, 72, 0.2);
+ font-size: 0.95rem;
+ color: var(--heading);
+ line-height: 1.5;
+ }
+ .envelope.opened { background: #fff; border-style: solid; }
+ .envelope.opened .envelope-msg { display: block; }
+
+ /* Page 5: Love Quiz */
+ .quiz-q {
+ margin-bottom: 1.3rem;
+ padding: 1rem;
+ background: #fffafb;
+ border-radius: 12px;
+ border: 1px solid var(--primary-light);
+ }
+ .quiz-q p { font-weight: 600; margin-bottom: 0.7rem; color: var(--heading); }
+ .quiz-opt {
+ display: block;
+ width: 100%;
+ text-align: left;
+ background: #fff;
+ border: 1px solid #cbd5e1;
+ padding: 0.6rem 0.9rem;
+ border-radius: 8px;
+ margin-bottom: 0.4rem;
+ cursor: pointer;
+ transition: 0.15s;
+ }
+ .quiz-opt:hover { background: var(--primary-light); }
+ .quiz-opt.correct { background: #dcfce7; border-color: #16a34a; color: #166534; font-weight: 600; }
+ .quiz-opt.wrong { background: #fee2e2; border-color: #dc2626; color: #991b1b; }
+ #quiz-score { font-weight: 700; color: var(--primary); margin-top: 0.5rem; font-size: 1.05rem; }
+
+ /* Page 6: Bucket List & Reason Jar */
+ .bucket-list { list-style: none; margin-bottom: 2rem; }
+ .bucket-list li {
+ padding: 0.75rem;
+ border-bottom: 1px solid #f1f5f9;
+ display: flex;
+ align-items: center;
+ gap: 0.7rem;
+ cursor: pointer;
+ }
+ .bucket-list li.done { text-decoration: line-through; color: #94a3b8; }
+ .note-display {
+ min-height: 80px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 1.1rem;
+ font-style: italic;
+ background: var(--primary-light);
+ border-radius: 12px;
+ padding: 1rem;
+ margin: 1rem 0;
+ text-align: center;
+ color: var(--heading);
+ }
+
+ /* Page 7: Playful Surprise Question */
+ .surprise-box {
+ text-align: center;
+ padding: 2rem 1rem;
+ position: relative;
+ min-height: 290px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ }
+ .btn-group {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ gap: 1rem;
+ margin-top: 1.5rem;
+ flex-wrap: wrap;
+ }
+ .btn {
+ background: var(--primary);
+ color: #fff;
+ border: none;
+ padding: 0.75rem 1.6rem;
+ border-radius: 999px;
+ font-size: 1rem;
+ font-weight: 700;
+ cursor: pointer;
+ transition: transform 0.2s ease, font-size 0.2s ease, padding 0.2s ease;
+ }
+ .btn:hover { background: var(--primary-dark); }
+ .btn-no { background: #64748b; position: relative; transition: 0.15s ease; }
+ #surprise-reply {
+ display: none;
+ margin-top: 1.5rem;
+ font-size: 1.3rem;
+ font-weight: 700;
+ color: var(--primary);
+ }
+
+ @media (max-width: 520px) {
+ .counter-grid { grid-template-columns: repeat(2, 1fr); }
+ .container { padding: 1.3rem; }
+ }
+    /* Interactive Gift Box */
+    .gift-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+    .gift-box {
+      font-size: 5rem;
+      cursor: pointer;
+      user-select: none;
+      display: inline-block;
+      animation: wiggle 1.8s infinite ease-in-out;
+      transition: transform 0.3s ease;
+    }
+    .gift-box:hover {
+      transform: scale(1.12);
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      20% { transform: rotate(-8deg); }
+      40% { transform: rotate(8deg); }
+      60% { transform: rotate(-5deg); }
+      80% { transform: rotate(5deg); }
+    }
+    .gift-hint {
+      margin-top: 0.7rem;
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 1rem;
+    }
+    .gift-reveal {
+      display: none;
+      background: var(--primary-light);
+      border: 2px solid var(--primary);
+      border-radius: 16px;
+      padding: 1.8rem 1.4rem;
+      max-width: 480px;
+      width: 100%;
+      animation: popOpen 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 12px 25px rgba(225, 29, 72, 0.18);
+    }
+    .gift-reveal.show {
+      display: block;
+    }
+    @keyframes popOpen {
+      0% { opacity: 0; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .gift-reveal h3 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 0.6rem;
+    }
+    .gift-reveal p {
+      color: var(--heading);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
+    }
+    /* Top Floating Wiggling Surprise Box */
+    .top-gift-btn {
+      position: fixed;
+      top: 14px;
+      right: 16px;
+      z-index: 90;
+      background: var(--card);
+      border: 2px solid var(--primary);
+      border-radius: 999px;
+      padding: 0.45rem 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(225, 29, 72, 0.22);
+      animation: topWiggle 2s infinite ease-in-out;
+    }
+    .top-gift-btn:hover {
+      background: var(--primary-light);
+    }
+    .top-gift-icon {
+      font-size: 1.4rem;
+    }
+    .top-gift-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    @keyframes topWiggle {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      15% { transform: rotate(-7deg) scale(1.05); }
+      30% { transform: rotate(7deg) scale(1.05); }
+      45% { transform: rotate(-4deg) scale(1.02); }
+      60% { transform: rotate(4deg) scale(1.02); }
+    }
+
+    /* Pop-Up Surprise Message Box */
+    .gift-popup-box {
+      background: #fff;
+      max-width: 440px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      border: 3px solid var(--primary);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+      animation: popScale 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popScale {
+      0% { opacity: 0; transform: scale(0.6); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .gift-popup-box h3 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin: 0.5rem 0 0.7rem;
+    }
+    .gift-popup-box p {
+      color: var(--heading);
+      font-size: 1.02rem;
+      line-height: 1.6;
+      margin-bottom: 1.4rem;
+    }
+    /* Falling Hearts, Tulips & Violet Lilies */
+    .falling-item {
+      position: fixed;
+      top: -50px;
+      z-index: 9999;
+      pointer-events: none;
+      user-select: none;
+      animation: fallDown linear forwards;
+    }
+    @keyframes fallDown {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      85% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+ </style>
+</head>
+<body>
+  <!-- Floating Wiggling Gift Box at Top of Screen -->
+  <button type="button" class="top-gift-btn" onclick="openTopSurprise()">
+    <span class="top-gift-icon">🎁</span>
+    <span class="top-gift-label">Click me!</span>
+  </button>
+
+   <!-- Pop-Up Message Window -->
+  <div class="modal" id="topSurpriseModal" onclick="closeTopSurprise()">
+    <div class="gift-popup-box" onclick="event.stopPropagation()">
+      <div style="font-size: 3rem;">🎉❤️🌷🪻</div>
+      <h3>Surprise, My Love!</h3>
+      <p>
+        I just wanted to remind you how lucky I am to have you in my life. You make every single day brighter, happier, and full of love.<br><br>
+        <strong>I love you endlessly! 🥰</strong>
+      </p>
+      <button type="button" class="btn" onclick="celebrateLove()">Aw, I Love You Too! ❤️</button>
+    </div>
+  <audio id="bgMusic" src="perfect.mp3" loop preload="auto"></audio>
+  <button type="button" id="musicBtn" onclick="toggleSong()" style="display: none; position: fixed; bottom: 18px; right: 18px; z-index: 95; background: #e11d48; color: #fff; border: none; padding: 0.6rem 1.1rem; border-radius: 999px; font-size: 0.88rem; font-weight: 700; cursor: pointer; box-shadow: 0 6px 18px rgba(225, 29, 72, 0.3);">⏸️ Pause "Perfect"</button>
+
+  </div>
+
+
+ <header>
+ <h1>For My Favorite Person ❤️</h1>
+ <p>Tap through the pages to explore our memories, letters, and surprises</p>
+ </header>
+
+ <nav class="tabs">
+ <button type="button" class="tab-btn active" data-target="home">🏠 Home & Timer</button>
+ <button type="button" class="tab-btn" data-target="gallery">📸 Photo Album</button>
+ <button type="button" class="tab-btn" data-target="timeline">🗓️ Our Story</button>
+ <button type="button" class="tab-btn" data-target="letters">💌 Open When...</button>
+ <button type="button" class="tab-btn" data-target="quiz">🎯 Couple Quiz</button>
+ <button type="button" class="tab-btn" data-target="bucket">✨ Bucket List & Jar</button>
+ <button type="button" class="tab-btn" data-target="surprise">🎁 Surprise</button>
+ </nav>
+
+ <main class="container">
+
+ <!-- PAGE 1: HOME & LIVE RELATIONSHIP TIMER -->
+ <section id="home" class="tab-content active">
+ <h2>Welcome To Our Corner of the Web</h2>
+ <p class="intro">Every second with you counts. Here is how long we have been making memories together:</p>
+
+ <div class="counter-grid">
+ <div class="time-box"><span id="days">0</span><small>Days</small></div>
+ <div class="time-box"><span id="hours">0</span><small>Hours</small></div>
+ <div class="time-box"><span id="minutes">0</span><small>Minutes</small></div>
+ <div class="time-box"><span id="seconds">0</span><small>Seconds</small></div>
+ </div>
+
+ <div class="info-cards">
+ <div class="info-card">
+ <h3>💑 About Us</h3>
+ <p>
+ <strong>First Met:</strong> October 12, 2024 • Downtown Coffee Shop<br>
+ <strong>Official Date:</strong> February 14, 2025<br>
+ <strong>Our Song:</strong> "Unconditionally" – Katy Perry
+ </p>
+ </div>
+ <div class="info-card">
+ <h3>🌟 Why I Made This</h3>
+ <p>I wanted to build a permanent little space on the internet where you can look back at our favorite photos, open letters whenever you miss me, and always remember how much I love you.</p>
+ </div>
+ </div>
+ </section>
+
+ <!-- PAGE 2: PHOTO GALLERY -->
+ <section id="gallery" class="tab-content">
+ <h2>Our Photo Album</h2>
+ <p class="intro">Tap any photo below to view it full-size and read the story behind it.</p>
+
+ <div class="gallery">
+ <div class="photo-card" onclick="openModal('https://unsplash.com', 'Our First Date ☕', 'I was so nervous before meeting you, but the second you smiled, all my worries disappeared.')">
+ <img src="https://unsplash.com" alt="Our First Date" />
+ <div class="caption">
+ <h4>Our First Date ☕</h4>
+ <p>Tap to read the full memory...</p>
+ </div>
+ </div>
+
+ <div class="photo-card" onclick="openModal('https://unsplash.com', 'Golden Hour Walk 🌅', 'One of my favorite afternoons just walking around, taking silly pictures, and talking for hours.')">
+ <img src="https://unsplash.com" alt="Golden Hour Walk" />
+ <div class="caption">
+ <h4>Golden Hour Walk 🌅</h4>
+ <p>Tap to read the full memory...</p>
+ </div>
+ </div>
+
+ <div class="photo-card" onclick="openModal('https://unsplash.com', 'Celebrating Us 🎉', 'No matter where we go or what we do, being beside you is always my favorite place to be.')">
+ <img src="https://unsplash.com" alt="Celebrating Us" />
+ <div class="caption">
+ <h4>Celebrating Us 🎉</h4>
+ <p>Tap to read the full memory...</p>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <!-- PAGE 3: TIMELINE -->
+ <section id="timeline" class="tab-content">
+ <h2>Our Timeline</h2>
+ <p class="intro">A look back at the chapters that brought us to where we are today.</p>
+
+ <div class="timeline-item">
+ <div class="timeline-date">Chapter 1 • October 2024</div>
+ <div class="timeline-title">The First Hello</div>
+ <p>The day we first started talking and stayed up way too late sending messages back and forth without running out of things to say.</p>
+ </div>
+ <div class="timeline-item">
+ <div class="timeline-date">Chapter 2 • November 2024</div>
+ <div class="timeline-title">Our First Hangout</div>
+ <p>Grabbing iced coffee and walking around until sunset—that was the moment I knew I wanted to spend every weekend with you.</p>
+ </div>
+ <div class="timeline-item">
+ <div class="timeline-date">Chapter 3 • February 14, 2025</div>
+ <div class="timeline-title">Becoming Official</div>
+ <p>The best decision I ever made. Officially calling you my girlfriend turned ordinary days into my favorite memories.</p>
+ </div>
+ <div class="timeline-item">
+ <div class="timeline-date">Chapter 4 • Today & Forever</div>
+ <div class="timeline-title">Still Falling For You</div>
+ <p>Every day with you continues to be the brightest part of my life, and I cannot wait for everything ahead of us.</p>
+ </div>
+ </section>
+
+ <!-- PAGE 4: OPEN WHEN ENVELOPES -->
+ <section id="letters" class="tab-content">
+ <h2>"Open When..." Letters</h2>
+ <p class="intro">Tap an envelope below to open a special message written for that exact mood.</p>
+
+ <div class="envelopes">
+ <div class="envelope" onclick="this.classList.toggle('opened')">
+ <div class="envelope-icon">🥺</div>
+ <strong>Open when you miss me</strong>
+ <div class="envelope-msg">Close your eyes and remember I'm always thinking of you. Send me a message or call me right now—I always have time for you! ❤️</div>
+ </div>
+
+ <div class="envelope" onclick="this.classList.toggle('opened')">
+ <div class="envelope-icon">🌧️</div>
+ <strong>Open when you have a bad day</strong>
+ <div class="envelope-msg">Take a deep breath. You are stronger and more capable than you know, and I am always right here in your corner cheering you on.</div>
+ </div>
+
+ <div class="envelope" onclick="this.classList.toggle('opened')">
+ <div class="envelope-icon">😴</div>
+ <strong>Open when you can't sleep</strong>
+ <div class="envelope-msg">Put your phone down after reading this, get cozy, and think about all the fun dates and trips we have ahead of us. Sweet dreams, my love.</div>
+ </div>
+
+ <div class="envelope" onclick="this.classList.toggle('opened')">
+ <div class="envelope-icon">🥰</div>
+ <strong>Open when you need a smile</strong>
+ <div class="envelope-msg">Quick reminder: You have the prettiest smile in the entire world, and you are my favorite person today, tomorrow, and always.</div>
+ </div>
+ </div>
+ </section>
+
+ <!-- PAGE 5: COUPLE QUIZ -->
+ <section id="quiz" class="tab-content">
+ <h2>How Well Do You Know Us? 🎯</h2>
+ <p class="intro">Test your memory! Tap an answer to see if you got it right.</p>
+
+ <div class="quiz-q">
+ <p>1. What did we do on our very first hangout?</p>
+ <button type="button" class="quiz-opt" onclick="checkAnswer(this, true)">A) Grabbed coffee and talked for hours ☕</button>
+ <button type="button" class="quiz-opt" onclick="checkAnswer(this, false)">B) Went skydiving</button>
+ <button type="button" class="quiz-opt" onclick="checkAnswer(this, false)">C) Watched a 4-hour documentary</button>
+ </div>
+
+ <div class="quiz-q">
+ <p>2. What is my favorite thing about you?</p>
+ <button type="button" class="quiz-opt" onclick="checkAnswer(this, false)">A) Only your taste in snacks</button>
+ <button type="button" class="quiz-opt" onclick="checkAnswer(this, true)">B) Your laugh, your kindness, and everything about you ❤️</button>
+ <button type="button" class="quiz-opt" onclick="checkAnswer(this, false)">C) How fast you text back</button>
+ </div>
+
+ <div class="quiz-q">
+ <p>3. Who fell in love first?</p>
+ <button type="button" class="quiz-opt" onclick="checkAnswer(this, true)">A) Definitely me! 🥰</button>
+ <button type="button" class="quiz-opt" onclick="checkAnswer(this, false)">B) You (nice try!)</button>
+ </div>
+ <div id="quiz-score"></div>
+ </section>
+
+ <!-- PAGE 6: BUCKET LIST & LOVE JAR -->
+ <section id="bucket" class="tab-content">
+ <h2>Our Bucket List & Love Jar ✨</h2>
+ <p class="intro">Tap items to check them off as we complete them together:</p>
+
+ <ul class="bucket-list">
+ <li class="done" onclick="this.classList.toggle('done')">✅ Go on a spontaneous late-night food run</li>
+ <li onclick="this.classList.toggle('done')">⬜ Watch the sunrise together at the beach</li>
+ <li onclick="this.classList.toggle('done')">⬜ Take a road trip singing our favorite playlist</li>
+ <li onclick="this.classList.toggle('done')">⬜ Cook a three-course dinner together from scratch</li>
+ <li onclick="this.classList.toggle('done')">⬜ Travel to our dream vacation spot</li>
+ </ul>
+
+ <h2>Need a Quick Reminder?</h2>
+ <div class="note-display" id="reason-text">Tap the button below to pull a reason why I love you! ❤️</div>
+ <div style="text-align: center;">
+ <button type="button" class="btn" onclick="newReason()">Pick a Reason ✨</button>
+ </div>
+ </section>
+
+    <!-- PAGE 7: SURPRISE GIFT BOX -->
+    <section id="surprise" class="tab-content">
+      <h2>A Little Surprise For You 🌷</h2>
+      <div class="gift-stage">
+        <div id="closed-gift" onclick="openGiftBox()">
+          <div class="gift-box">🎁</div>
+          <div class="gift-hint">Tap the box to open your surprise! ✨</div>
+        </div>
+
+        <div class="gift-reveal" id="opened-gift">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎉❤️🌷</div>
+          <h3>I Love You So Much, My Dear!</h3>
+          <p>
+            You are the best gift that ever came into my life. Thank you for every laugh, every late-night talk, and for simply being you.<br><br>
+            <strong>Get ready—our next date is on me! 🥰</strong>
+          </p>
+          <button type="button" class="btn" onclick="resetGiftBox()">Close Box 🎁</button>
+        </div>
+      </div>
+    </section>
+
+
+ </main>
+
+ <div class="modal" id="photoModal" onclick="closeModal()">
+ <div class="modal-box" onclick="event.stopPropagation()">
+ <img id="modalImg" src="" alt="Full Memory" />
+ <h3 id="modalTitle"></h3>
+ <p id="modalDesc"></p>
+ <button type="button" class="btn" onclick="closeModal()">Close</button>
+ </div>
+</div>
+ <script>
+ document.addEventListener("DOMContentLoaded", function () {
+ var tabButtons = document.querySelectorAll('.tab-btn');
+ var tabContents = document.querySelectorAll('.tab-content');
+
+ tabButtons.forEach(function (btn) {
+ btn.addEventListener('click', function () {
+ var targetId = this.getAttribute('data-target');
+ tabButtons.forEach(function (b) { b.classList.remove('active'); });
+ tabContents.forEach(function (c) { c.classList.remove('active'); });
+ this.classList.add('active');
+ var targetSection = document.getElementById(targetId);
+ if (targetSection) {
+ targetSection.classList.add('active');
+ }
+ });
+ });
+
+ var startDate = new Date("2025-02-14T00:00:00").getTime();
+
+ function updateTimer() {
+ var now = new Date().getTime();
+ var diff = now - startDate;
+ if (diff > 0) {
+ document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+ document.getElementById("hours").innerText = Math.floor((diff / (1000 * 60 * 60)) % 24);
+ document.getElementById("minutes").innerText = Math.floor((diff / 1000 / 60) % 60);
+ document.getElementById("seconds").innerText = Math.floor((diff / 1000) % 60);
+ }
+ }
+ updateTimer();
+ setInterval(updateTimer, 1000);
+
+ var noBtn = document.getElementById('no-btn');
+ var yesBtn = document.getElementById('yes-btn');
+ var yesScale = 1;
+ var noTexts = ["Are you sure? 🥺", "Think again! 😭", "Wrong button! 👉", "Nice try! 😂", "Click Yes! ❤️"];
+ var noIndex = 0;
+
+ function moveNoBtn() {
+ var x = Math.floor(Math.random() * 160) - 80;
+ var y = Math.floor(Math.random() * 110) - 55;
+ noBtn.style.transform = "translate(" + x + "px, " + y + "px)";
+ noBtn.innerText = noTexts[noIndex % noTexts.length];
+ noIndex++;
+
+ yesScale = Math.min(yesScale + 0.15, 2.2);
+ yesBtn.style.transform = "scale(" + yesScale + ")";
+ }
+
+ if (noBtn) {
+ noBtn.addEventListener('mouseover', moveNoBtn);
+ noBtn.addEventListener('touchstart', function (e) {
+ e.preventDefault();
+ moveNoBtn();
+ });
+ noBtn.addEventListener('click', moveNoBtn);
+ }
+ });
+
+ function openModal(imgSrc, title, desc) {
+ document.getElementById('modalImg').src = imgSrc;
+ document.getElementById('modalTitle').innerText = title;
+ document.getElementById('modalDesc').innerText = desc;
+ document.getElementById('photoModal').classList.add('open');
+ }
+ function closeModal() {
+ document.getElementById('photoModal').classList.remove('open');
+ }
+
+ function checkAnswer(btn, isCorrect) {
+ var siblings = btn.parentElement.querySelectorAll('.quiz-opt');
+ siblings.forEach(function (b) { b.classList.remove('correct', 'wrong'); });
+ btn.classList.add(isCorrect ? 'correct' : 'wrong');
+
+ var totalCorrect = document.querySelectorAll('.quiz-opt.correct').length;
+ var scoreEl = document.getElementById('quiz-score');
+ if (scoreEl) {
+ scoreEl.innerText = "Score: " + totalCorrect + " / 3 correct ❤️";
+ }
+ }
+
+ var reasons = [
+ "The way your eyes light up whenever you talk about something you love.",
+ "How peaceful and happy I feel every single time I am around you.",
+ "Your kindness, patience, and how deeply you care for everyone.",
+ "Even ordinary errands feel like a fun date when you are beside me.",
+ "You always know how to make me smile even on my busiest days."
+ ];
+ function newReason() {
+ var pick = reasons[Math.floor(Math.random() * reasons.length)];
+ document.getElementById('reason-text').innerText = '"' + pick + '"';
+ }
+
+ function acceptLove() {
+ document.getElementById('surprise-reply').style.display = 'block';
+ document.getElementById('no-btn').style.display = 'none';
+ document.getElementById('yes-btn').style.transform = 'scale(1.1)';
+ }
+    function openGiftBox() {
+      document.getElementById('closed-gift').style.display = 'none';
+      document.getElementById('opened-gift').classList.add('show');
+    }
+
+    function resetGiftBox() {
+      document.getElementById('opened-gift').classList.remove('show');
+      document.getElementById('closed-gift').style.display = 'block';
+    }
+      function openTopSurprise() {
+      document.getElementById('topSurpriseModal').classList.add('open');
+    }
+
+    function closeTopSurprise() {
+      document.getElementById('topSurpriseModal').classList.remove('open');
+    }
+
+    function celebrateLove() {
+      closeTopSurprise();
+
+      var items = ["❤️", "💖", "🌷", "🌷", "🪻", "💜", "🌷", "❤️", "🪻"];
+      var totalCount = 55;
+
+      for (var i = 0; i < totalCount; i++) {
+        (function (index) {
+          setTimeout(function () {
+            var el = document.createElement("div");
+            el.className = "falling-item";
+            el.innerText = items[Math.floor(Math.random() * items.length)];
+            el.style.left = Math.random() * 96 + "vw";
+            el.style.fontSize = (Math.floor(Math.random() * 18) + 22) + "px";
+
+            var duration = (Math.random() * 2.5 + 2.5).toFixed(2);
+            el.style.animationDuration = duration + "s";
+
+            document.body.appendChild(el);
+
+            setTimeout(function () {
+              if (el.parentNode) {
+                el.parentNode.removeChild(el);
+              }
+            }, parseFloat(duration) * 1000 + 200);
+          }, index * 45);
+        })(i);
+      }
+    }
+    var songStarted = false;
+
+    function playMusicNow() {
+      var song = document.getElementById("bgMusic");
+      var btn = document.getElementById("songBtn");
+      if (song) {
+        if (!songStarted) {
+          song.currentTime = 52; // Jumps straight to 0:52 (the chorus)
+          songStarted = true;
+        }
+        song.play().catch(function () {});
+        if (btn) {
+          btn.style.display = "block";
+          btn.innerText = "⏸️ Pause Music";
+        }
+      }
+    }
+
+    function toggleSong() {
+      var song = document.getElementById("bgMusic");
+      var btn = document.getElementById("songBtn");
+      if (song.paused) {
+        song.play();
+        btn.innerText = "⏸️ Pause Music";
+      } else {
+        song.pause();
+        btn.innerText = "🎵 Play Music";
+      }
+    }
+
+    function openGiftBox() {
+      document.getElementById('closed-gift').style.display = 'none';
+      document.getElementById('opened-gift').classList.add('show');
+      playMusicNow();
+    }
+
+    function openTopSurprise() {
+      document.getElementById('topSurpriseModal').classList.add('open');
+      playMusicNow();
+    }
+
+ </script>
+
+</body>
+</html>
