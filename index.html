@@ -471,8 +471,9 @@
       </p>
       <button type="button" class="btn" onclick="celebrateLove()">Aw, I Love You Too! ❤️</button>
     </div>
-  <audio id="bgMusic" src="perfect.mp3" loop preload="auto"></audio>
-  <button type="button" id="musicBtn" onclick="toggleSong()" style="display: none; position: fixed; bottom: 18px; right: 18px; z-index: 95; background: #e11d48; color: #fff; border: none; padding: 0.6rem 1.1rem; border-radius: 999px; font-size: 0.88rem; font-weight: 700; cursor: pointer; box-shadow: 0 6px 18px rgba(225, 29, 72, 0.3);">⏸️ Pause "Perfect"</button>
+  <audio id="bgMusic" src="perfect.mp3" loop preload="metadata" playsinline></audio>
+  <button type="button" onclick="pauseAndHideSong()" id="songBtn" style="display: none; position: fixed; top: 14px; left: 16px; z-index: 90; background: #e11d48; color: #ffffff; border: 2px solid #e11d48; padding: 0.45rem 0.9rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700; cursor: pointer; box-shadow: 0 6px 18px rgba(225, 29, 72, 0.22);">⏸️ Pause Music</button>
+
 
   </div>
 
@@ -842,18 +843,30 @@
     function playMusicNow() {
       var song = document.getElementById("bgMusic");
       var btn = document.getElementById("songBtn");
-      if (song) {
+      if (!song) return;
+
+      song.play().then(function () {
         if (!songStarted) {
-          song.currentTime = 52; // Jumps straight to 0:52 (the chorus)
+          song.currentTime = 52;
           songStarted = true;
         }
-        song.play().catch(function () {});
         if (btn) {
           btn.style.display = "block";
-          btn.innerText = "⏸️ Pause Music";
         }
+      }).catch(function () {});
+    }
+
+    function pauseAndHideSong() {
+      var song = document.getElementById("bgMusic");
+      var btn = document.getElementById("songBtn");
+      if (song) {
+        song.pause();
+      }
+      if (btn) {
+        btn.style.display = "none";
       }
     }
+
 
     function toggleSong() {
       var song = document.getElementById("bgMusic");
